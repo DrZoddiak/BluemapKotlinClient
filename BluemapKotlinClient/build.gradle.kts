@@ -1,5 +1,4 @@
 plugins {
-    application
     java
     kotlin("jvm") version "2.0.0"
     kotlin("plugin.serialization") version "2.0.20"
@@ -12,20 +11,16 @@ version = "1.0-SNAPSHOT"
 
 val classMain = "$group.MainKt"
 
-application {
-    mainClass = classMain
-}
-
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
     implementation("io.ktor:ktor-client-core:3.0.0")
     implementation("io.ktor:ktor-client-cio:3.0.0")
     implementation("io.ktor:ktor-client-content-negotiation:3.0.0")
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     implementation(kotlin("reflect"))
 }
@@ -70,11 +65,5 @@ publishing {
                 }
             }
         }
-    }
-}
-
-tasks.jar {
-    manifest {
-        attributes("Main-Class" to classMain)
     }
 }
