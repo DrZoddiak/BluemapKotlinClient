@@ -7,25 +7,17 @@ plugins {
     `java-library`
 }
 
-java {
-    withSourcesJar()
-}
-
 group = "com.github.drzoddiak"
 version = "1.0-SNAPSHOT"
 
-repositories {
-    mavenCentral()
-}
+val classMain = "$group.MainKt"
 
 application {
-    mainClass = "com.github.drzoddiak.MainKt"
+    mainClass = classMain
 }
 
-tasks.jar {
-    manifest {
-        attributes("Main-Class" to "com.github.drzoddiak.MainKt")
-    }
+repositories {
+    mavenCentral()
 }
 
 dependencies {
@@ -42,14 +34,18 @@ kotlin {
     jvmToolchain(21)
 }
 
+java {
+    withSourcesJar()
+}
+
 publishing {
     repositories {
         maven {
             name = "deploy"
-            url = uri("https://maven.democracycraft.net/snapshots/")
+            url = uri(providers.gradleProperty("deployUrl").getOrElse(""))
             credentials {
-                username = "realtyCheckerPublish"
-                password = "YdH2m94iEAks9Eq3eXrdYTlYzNnLEqoNoRjv5hYA2uDtJSW+jPg6vsTjMR19LR25"
+                username = providers.gradleProperty("deployUsername").orNull
+                password = providers.gradleProperty("deployPassword").orNull
             }
         }
     }
@@ -65,20 +61,20 @@ publishing {
     afterEvaluate {
         publications.withType<MavenPublication> {
             pom {
-                // url.set("https://github.com/MCCitiesNetwork/realty")
+                url.set("https://github.com/DrZoddiak/BluemapKotlinClient")
                 developers {
                     developer {
                         id.set("DrZoddiak")
                         name.set("Jesse McKee")
-                        // email.set("")
                     }
                 }
-            /*    scm {
-                    connection.set("scm:git:git://github.com/MCCitiesNetwork/realty.git")
-                    developerConnection.set("scm:git:ssh://github.com/MCCitiesNetwork/realty.git")
-                    url.set("https://github.com/MCCitiesNetwork/realty")
-                }*/
             }
         }
+    }
+}
+
+tasks.jar {
+    manifest {
+        attributes("Main-Class" to classMain)
     }
 }
