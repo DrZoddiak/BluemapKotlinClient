@@ -2,7 +2,7 @@
 ```kotlin
 // Method should be suspended to make requests
 suspend fun main() {
-    RealtyClient().request { response : BluemapSerializableData.BlueBridge ->
+    RealtyClient().requestRegionData { response : BluemapSerializableData.BlueBridge ->
 
         // Get a list of Markers to work with
         val markers : List<Marker> = response.worldguardBridge.markers
