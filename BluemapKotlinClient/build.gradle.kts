@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.drzoddiak"
-version = "1.1.0-SNAPSHOT"
+version = "1.2.0-SNAPSHOT"
 
 val classMain = "$group.MainKt"
 
@@ -19,10 +19,14 @@ dependencies {
     implementation("io.ktor:ktor-client-core:3.0.0")
     implementation("io.ktor:ktor-client-cio:3.0.0")
     implementation("io.ktor:ktor-client-content-negotiation:3.0.0")
-    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+
+    api("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
+    api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     implementation(kotlin("reflect"))
+
+    // Exposed types for shapes
+    api("org.locationtech.jts:jts-core:1.19.0")
 }
 
 kotlin {

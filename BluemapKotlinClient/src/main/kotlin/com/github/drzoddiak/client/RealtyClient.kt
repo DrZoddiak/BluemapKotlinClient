@@ -1,10 +1,11 @@
 package com.github.drzoddiak.client
 
-import com.github.drzoddiak.model.BlueBridgeSerializable
+import com.github.drzoddiak.model.IBlueBridge
 import com.github.drzoddiak.model.PlayerSerializable
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
+import io.ktor.client.plugins.UserAgent
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
 import io.ktor.client.statement.request
@@ -22,17 +23,20 @@ class RealtyClient(val url: String = "https://map.mcstatecraft.com/maps/newhamil
             install(ContentNegotiation) {
                 json(Json { ignoreUnknownKeys = true })
             }
+            install(UserAgent) {
+                agent = "BluemapKotlinClient"
+            }
         }
         execute.invoke(client)
         client.close()
     }
 
-    suspend fun requestRegionData(execute: suspend (BlueBridgeSerializable) -> Unit) {
-        request<BlueBridgeSerializable>("markers.json") { execute(it) }
+    suspend inline fun <reified T : IBlueBridge> requestRegionData(crossinline execute: suspend (T) -> Unit) {
+        request<T>("markers.json") { execute(it) }
     }
 
-    suspend fun requestPlayerData(execute: suspend (PlayerSerializable.PlayerData) -> Unit) {
-        request<PlayerSerializable.PlayerData>("players.json") { execute(it) }
+    suspend fun requestPlayerData(execute: suspend (PlayerSerializable.Players) -> Unit) {
+        request<PlayerSerializable.Players>("players.json") { execute(it) }
     }
 
     suspend inline fun <reified T> request(urlAppend: String, crossinline execute: suspend (T) -> Unit) {
