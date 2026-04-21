@@ -12,17 +12,10 @@ import org.locationtech.jts.geom.Polygon
 object RegionSerializable {
     @Serializable
     data class BridgeData(
-        // "Worldguard Regions"
         val label: String,
-        // True
         val toggleable: Boolean,
-        // True
         val defaultHidden: Boolean,
-        // 0
         val sorting: Int,
-        // Collection of (But not a list) worldguard regions
-        // We know the sub-object of this object, but because there is an unknowable number of, and name of at compile
-        // the name of the markers we have to sacrifice consistency
         @Serializable(with = RegionMarkerSerializer::class)
         val markers: Map<String, RegionMarker>,
     )
