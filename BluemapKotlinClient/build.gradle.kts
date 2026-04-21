@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.drzoddiak"
-version = "1.2.0-SNAPSHOT"
+version = "1.2.1-SNAPSHOT"
 
 val classMain = "$group.MainKt"
 

@@ -1,6 +1,5 @@
 package com.github.drzoddiak.client
 
-import com.github.drzoddiak.model.IBlueBridge
 import com.github.drzoddiak.model.PlayerSerializable
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
@@ -31,7 +30,7 @@ class RealtyClient(val url: String = "https://map.mcstatecraft.com/maps/newhamil
         client.close()
     }
 
-    suspend inline fun <reified T : IBlueBridge> requestRegionData(crossinline execute: suspend (T) -> Unit) {
+    suspend inline fun <reified T> requestRegionData(crossinline execute: suspend (T) -> Unit) {
         request<T>("markers.json") { execute(it) }
     }
 
