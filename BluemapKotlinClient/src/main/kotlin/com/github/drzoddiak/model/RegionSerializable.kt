@@ -18,7 +18,11 @@ object RegionSerializable {
         val sorting: Int,
         @Serializable(with = RegionMarkerSerializer::class)
         val markers: Map<String, RegionMarker>,
-    )
+    ) {
+        fun regionOrNull(name: String): RegionMarker? {
+            return markers.values.firstOrNull { it.label.contentEquals(name, true) }
+        }
+    }
 
     private val factory
         get() = GeometryFactory()

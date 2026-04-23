@@ -14,32 +14,41 @@ import kotlinx.serialization.json.Json
 
 class RealtyClient(val url: String = "https://map.mcstatecraft.com/maps/newhamilton/live") {
 
-    suspend fun requestRaw(execute: suspend (HttpClient) -> Unit) {
-        val client = HttpClient(CIO) {
-            headers {
-                append("Accept", "application/json")
-            }
-            install(ContentNegotiation) {
-                json(Json { ignoreUnknownKeys = true })
-            }
-            install(UserAgent) {
-                agent = "BluemapKotlinClient"
-            }
+    private val client: HttpClient = HttpClient(CIO) {
+        headers {
+            append("Accept", "application/json")
         }
-        execute.invoke(client)
+        install(ContentNegotiation) {
+            json(Json { ignoreUnknownKeys = true })
+        }
+        install(UserAgent) {
+            agent = "BluemapKotlinClient"
+        }
+    }
+
+    fun closeClient() {
         client.close()
     }
 
+    suspend fun <R> requestRaw(execute: suspend (HttpClient) -> R): R {
+        return execute.invoke(client)
+    }
+
+    suspend inline fun <reified T, R> requestRegionData(crossinline execute: suspend (T) -> R): R {
+        return request<T, R>("markers.json") { execute(it) }
+    }
+
+    @JvmName("requestRegionDataUnit")
     suspend inline fun <reified T> requestRegionData(crossinline execute: suspend (T) -> Unit) {
-        request<T>("markers.json") { execute(it) }
+        return request<T, Unit>("markers.json") { execute(it) }
     }
 
-    suspend fun requestPlayerData(execute: suspend (PlayerSerializable.Players) -> Unit) {
-        request<PlayerSerializable.Players>("players.json") { execute(it) }
+    suspend fun <R> requestPlayerData(execute: suspend (PlayerSerializable.Players) -> R): R {
+        return request<PlayerSerializable.Players, R>("players.json") { execute(it) }
     }
 
-    suspend inline fun <reified T> request(urlAppend: String, crossinline execute: suspend (T) -> Unit) {
-        requestRaw { client ->
+    suspend inline fun <reified T, R> request(urlAppend: String, crossinline execute: suspend (T) -> R): R {
+        return requestRaw { client ->
             client.get("$url/$urlAppend").request.call.body<T>()
                 .let { execute(it) }
         }

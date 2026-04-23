@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "com.github.drzoddiak"
-version = "1.2.1-SNAPSHOT"
+version = "1.3.0-SNAPSHOT"
 
 val classMain = "$group.MainKt"
 
@@ -19,8 +19,8 @@ dependencies {
     implementation("io.ktor:ktor-client-core:3.0.0")
     implementation("io.ktor:ktor-client-cio:3.0.0")
     implementation("io.ktor:ktor-client-content-negotiation:3.0.0")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
 
-    api("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
     api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
 
     implementation(kotlin("reflect"))
